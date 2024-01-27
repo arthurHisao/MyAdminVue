@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.transition-fade-text {
+    transition: margin-left 0.3s linear, opacity 0.3s ease, visibility 0.3s ease;
+}
