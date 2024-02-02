@@ -8,14 +8,14 @@ import { useAppStore } from '@/stores/app'
 import { storeToRefs } from 'pinia'
 
 const appStore = useAppStore()
-const { sidebarStateCollapsed } = storeToRefs(appStore)
+const { isSidebarCollapsed } = storeToRefs(appStore)
 </script>
 
 <template>
   <HeaderComponent />
   <SidebarComponent />
   <section
-    :class="sidebarStateCollapsed ? 'lg:ml-16' : 'lg:ml-48'"
+    :class="isSidebarCollapsed ? 'lg:ml-16' : 'lg:ml-48'"
     class="py-4 px-4 h-screen bg-gray-100 dark:bg-slate-700"
   >
     <div class="container mx-auto">

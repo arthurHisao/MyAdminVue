@@ -7,7 +7,7 @@ import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 
 const appStore = useAppStore()
-const { sidebarStateCollapsed } = storeToRefs(appStore)
+const { isSidebarCollapsed } = storeToRefs(appStore)
 
 const isDropdownShowing = ref(false)
 
@@ -15,18 +15,18 @@ const handleShowDropdown = () => {
   isDropdownShowing.value = !isDropdownShowing.value
 }
 
-const handleCollapseSidebar = () => {
-  appStore.setSidebarCollapsed()
+const handleToggleSidebar = () => {
+  appStore.toggleSidebar()
 }
 </script>
 
 <template>
   <header
-    :class="sidebarStateCollapsed ? 'lg:ml-16' : 'lg:ml-48'"
+    :class="isSidebarCollapsed ? 'lg:ml-16' : 'lg:ml-48'"
     class="shadow-sm dark:shadow-dark-mode-sm z-10 max-h-20 h-16 bg-white dark:bg-slate-800 dark:text-white sticky top-0 transition-margin-left duration-300 ease-in-out"
   >
     <div class="container mx-auto px-4 flex flex-row justify-between items-center h-full">
-      <div class="p-1" @click="handleCollapseSidebar">
+      <div class="p-1" @click="handleToggleSidebar">
         <IconComponent class="dark:text-white cursor-pointer" iconName="MdMenuRound" scale="1" />
       </div>
       <nav>

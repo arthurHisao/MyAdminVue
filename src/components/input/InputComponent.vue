@@ -19,6 +19,8 @@ defineProps({
   }
 })
 
+const inputData = defineModel('inputData')
+
 const convertIconNameToKebabCase = (name: string) => {
   return name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
 }
@@ -31,6 +33,7 @@ const convertIconNameToKebabCase = (name: string) => {
       :class="className"
       class="p-2 m-0 w-full text-sm rounded-sm dark:bg-slate-800 dark:border-slate-600 border-gray-300 shadow-sm dark:focus:border-slate-500 focus:border-indigo-300 focus:ring dark:focus:ring-slate-700 focus:ring-indigo-200 focus:ring-opacity-50"
       :placeholder="placeholder"
+      v-model="inputData"
     />
     <v-icon
       v-if="iconName"

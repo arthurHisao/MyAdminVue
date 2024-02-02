@@ -1,9 +1,17 @@
 import { defineStore } from 'pinia'
+import api from '@/utils/axios'
+
+interface IRouter {
+    push: (to: string) => void
+}
 
 export const useAppStore = defineStore('app', {
     state: () => ({
         isDarkState: false,
-        sidebarStateCollapsed: false,
+        isLoggedIn: false,
+        isSidebarCollapsed: false,
+        isOffCanvasOpen: false,
+        $router: {} as IRouter
     }),
     getters: {
         // change state to: Darkmode || Lightmode
@@ -28,17 +36,39 @@ export const useAppStore = defineStore('app', {
             } 
 
             // Automatically detects OS dark theme
-            if (localStorage.theme == 'auto' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            if ((!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 this.setDarkMode
-                localStorage.theme  = 'auto'
             } 
         },
+
+        async login(formInputs: { email: string, password: string}) {
+            const { email, password} = formInputs
+            
+            api
+            .post('/login',{ email, password})
+            .then((response) => {
+                // custom toast show here...
+                this.isLoggedIn = true
+                this.$router.push("/admin")
+            })
+            .catch((error) => {
+                // custom toast show here...
+                console.log(error)
+            })
+        },
+
         toggleTheme() {
             this.setDarkMode
         },
 
-        setSidebarCollapsed() {
-            this.sidebarStateCollapsed = !this.sidebarStateCollapsed
+        toggleSidebar() {
+            if (window.screen.width >= 1024) {
+                this.isOffCanvasOpen = false
+                this.isSidebarCollapsed = !this.isSidebarCollapsed
+            } else {
+                this.isSidebarCollapsed = false
+                this.isOffCanvasOpen = !this.isOffCanvasOpen
+            }
         }
     }
 })
