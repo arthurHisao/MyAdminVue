@@ -4,20 +4,28 @@ import ToggleSwitchButton from '@/components/buttons/ChangeThemeComponent.vue'
 import { RouterLink } from 'vue-router'
 import { useAppStore } from '@/stores/app'
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const appStore = useAppStore()
-const { isSidebarCollapsed } = storeToRefs(appStore)
+const { isSidebarCollapsed, loggedUserInfo } = storeToRefs(appStore)
+const { toggleSidebar, logout, getAuthenticatedUser } = appStore
 
 const isDropdownShowing = ref(false)
-
 const handleShowDropdown = () => {
   isDropdownShowing.value = !isDropdownShowing.value
 }
 
 const handleToggleSidebar = () => {
-  appStore.toggleSidebar()
+  toggleSidebar()
 }
+
+const handleLogout = () => {
+  logout()
+}
+
+onMounted(() => {
+  getAuthenticatedUser()
+})
 </script>
 
 <template>
@@ -37,12 +45,12 @@ const handleToggleSidebar = () => {
           <li>
             <div class="flex items-center justify-center gap-2 relative">
               <!-- ======= User NAME ======= -->
-              <span>USER NAME</span>
+              <span>{{ loggedUserInfo.name }}</span>
               <div
                 class="rounded-full cursor-pointer select-none bg-gray-400 w-10 h-10 flex items-center justify-center"
                 @click="handleShowDropdown"
               >
-                <span>UN</span>
+                <span>{{ appStore.setUserAvatar }}</span>
               </div>
               <!-- ======= Drop Down ======= -->
               <ul
@@ -53,7 +61,7 @@ const handleToggleSidebar = () => {
                   <router-link to="settings">Account Settings</router-link>
                 </li>
                 <li class="py-2 px-4 hover:bg-gray-200 dark:hover:bg-slate-500">
-                  <router-link to="login">Logout</router-link>
+                  <a href="logout" @click.prevent="handleLogout">Logout</a>
                 </li>
               </ul>
               <div

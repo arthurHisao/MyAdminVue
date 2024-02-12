@@ -1,9 +1,13 @@
 import { defineStore } from 'pinia'
 import api from '@/utils/axios'
+import Cookies from 'js-cookie'
+import { useToast } from 'vue-toastification'
 
 interface IRouter {
     push: (to: string) => void
 }
+
+const toast = useToast()
 
 export const useAppStore = defineStore('app', {
     state: () => ({
@@ -11,6 +15,15 @@ export const useAppStore = defineStore('app', {
         isLoggedIn: false,
         isSidebarCollapsed: false,
         isOffCanvasOpen: false,
+        isToastShowing: false,
+        isLoading: false,
+        loggedUserInfo: {
+            id: 0,
+            name: '',
+            // avatar: '',
+            email: '',
+            createdAt: '',
+        },
         $router: {} as IRouter
     }),
     getters: {
@@ -25,8 +38,8 @@ export const useAppStore = defineStore('app', {
                 localStorage.theme = 'dark'
                 return state.isDarkState = true
             }
-
-        }
+        },
+        setUserAvatar: (state) => state.loggedUserInfo.name.split(' ').map(str => str.charAt(0)).join('').substring(0, 2)
     },
     actions: {
         detectMode() {
@@ -41,20 +54,49 @@ export const useAppStore = defineStore('app', {
             } 
         },
 
-        async login(formInputs: { email: string, password: string}) {
+        isAuth() {
+            const token =  Cookies.get('XSRF-TOKEN')
+
+            if (token) {
+                return this.isLoggedIn = true
+            }
+            return this.isLoggedIn = false
+        },
+
+        getToken() {
+            api.get('/csrf-cookie')
+        },
+
+        login(formInputs: { email: string, password: string}) {
             const { email, password} = formInputs
-            
+
+            this.isLoading = true           
             api
-            .post('/login',{ email, password})
-            .then((response) => {
-                // custom toast show here...
-                this.isLoggedIn = true
+             .post('/login',{ email, password})
+             .then(() => {
                 this.$router.push("/admin")
-            })
-            .catch((error) => {
-                // custom toast show here...
-                console.log(error)
-            })
+                this.isLoading = false
+             })
+             .catch((error) => {
+                toast.error(error.response.data.message)
+                this.isLoading = false
+             })
+        },
+
+        async logout() {
+            await api.get('/logout')
+            window.location.href = '/login'          
+        }, 
+
+        getAuthenticatedUser() {
+            api
+             .get('/user')
+             .then((response) => {
+                this.loggedUserInfo = response.data
+             })
+             .catch((error) => {
+                toast.error(error.response.data.message)
+             })
         },
 
         toggleTheme() {

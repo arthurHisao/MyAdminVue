@@ -4,6 +4,8 @@ import { createApp, markRaw } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
+import Toast, { type PluginOptions } from "vue-toastification";
+import "vue-toastification/dist/index.css";
 import { OhVueIcon, addIcons } from 'oh-vue-icons'
 import { 
     MdLockoutline, 
@@ -13,7 +15,8 @@ import {
     MdMenuRound,
     MdDashboard,
     MdProductionquantitylimitsRound,
-    MdPeople
+    MdPeople,
+    MdInfoRound
 } from 'oh-vue-icons/icons'
 
 addIcons(
@@ -24,7 +27,8 @@ addIcons(
     MdMenuRound,
     MdDashboard,
     MdProductionquantitylimitsRound,
-    MdPeople
+    MdPeople,
+    MdInfoRound
 )
 
 const app = createApp(App)
@@ -34,7 +38,18 @@ pinia.use(({ store }) => {
     store.$router = markRaw(router)
 })
 
-app.component("v-icon", OhVueIcon);
+/**
+ * @see
+ * https://vue-toastification.maronato.dev/
+ */
+const options: PluginOptions = {
+    transition: "Vue-Toastification__fade",
+    maxToasts: 5,
+    newestOnTop: true,
+}
+
+app.use(Toast, options)
+app.component("v-icon", OhVueIcon)
 app.use(pinia)
 app.use(router)
 

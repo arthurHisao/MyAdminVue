@@ -78,7 +78,7 @@ const sidebarLinks = [
       class="flex justify-start items-center border-b border-b-gray-500/5 dark:border-b-white/10 h-16"
     >
       <a href="" class="flex flex-row items-center whitespace-nowrap">
-        <LogoComponent class="w-16 h-auto p-2" />
+        <LogoComponent class="w-16 h-auto p-3" />
         <span
           :class="isSidebarCollapsed ? 'invisible animate-fadeOut' : 'visible animate-fadeIn'"
           class="text-sm transition-fade-text"

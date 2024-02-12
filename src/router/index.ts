@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAppStore } from '@/stores/app'
-import { storeToRefs } from 'pinia'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,6 +24,11 @@ const router = createRouter({
           path: '',
           component: () => import('../pages/DashboardPage.vue'),
           meta: { requiredAuth: true }
+        },
+        {
+          path: '/products',
+          component: () => import('../pages/ProductPage.vue'),
+          meta: { requiredAuth: true }
         }
       ],
       component: () => import('../views/admin/AdminView.vue')
@@ -34,9 +38,10 @@ const router = createRouter({
 
 router.beforeEach((to) => {
   const appStore = useAppStore()
-  const { isLoggedIn } = storeToRefs(appStore)
+  // const { isLoggedIn } = storeToRefs(appStore)
+  const { isAuth } = appStore
 
-  if (to.meta.requiredAuth && isLoggedIn.value == false) {
+  if (to.meta.requiredAuth && !isAuth()) {
     return {
       path: '/login'
     }

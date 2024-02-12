@@ -16,7 +16,7 @@ const { isSidebarCollapsed } = storeToRefs(appStore)
   <SidebarComponent />
   <section
     :class="isSidebarCollapsed ? 'lg:ml-16' : 'lg:ml-48'"
-    class="py-4 px-4 h-screen bg-gray-100 dark:bg-slate-700"
+    class="py-4 px-4 h-screen bg-gray-100 dark:bg-slate-700 transition-margin-left duration-300 ease-in-out"
   >
     <div class="container mx-auto">
       <Breadcrumbs />
